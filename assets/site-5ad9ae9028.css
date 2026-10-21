@@ -1,0 +1,1281 @@
+/*
+ * The shop's website (docs/16). Colours come from specs/theme.yaml as custom properties
+ * written into the page by site/build.py; this file holds layout and type only.
+ *
+ * The page is the shop's sign over its ledger: the badge's green and gold at the top,
+ * then the list as the PDF prints it, leader dots carrying the eye to the price.
+ */
+
+@font-face {
+  font-family: "Plex Arabic";
+  src: url("fonts/plex-arabic-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Plex Arabic";
+  src: url("fonts/plex-arabic-600.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Ruqaa";
+  src: url("fonts/aref-ruqaa-700.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --body: "Plex Arabic", "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --display: "Ruqaa", "Plex Arabic", serif;
+  --heading: var(--sign-ink);
+  --gutter: 16px;
+  --bar-h: 132px;
+  --radius: 12px;
+  color-scheme: dark;
+}
+/* Dark is the shop's default look (owner, 2026-10-20); light is one tap away (☀︎). */
+:root[data-theme="light"] {
+  --heading: var(--sign);
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: var(--bar-h);
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  display: block;
+}
+
+a {
+  color: var(--accent);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip {
+  position: absolute;
+  inset-inline-start: var(--gutter);
+  top: -100px;
+  z-index: 30;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 600;
+}
+.skip:focus {
+  top: 12px;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  fill: currentColor;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1160px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ------------------------------------------------------------------ the sign */
+
+.sign {
+  background: var(--sign);
+  color: var(--sign-ink);
+}
+.sign :focus-visible,
+.foot :focus-visible {
+  outline-color: var(--sign-ink);
+}
+
+.sign__in {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 14px;
+  row-gap: 16px;
+  padding-block: 18px 20px;
+}
+
+.sign__badge {
+  width: 76px;
+  height: 76px;
+}
+
+.sign__name {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 31px;
+  line-height: 1.25;
+}
+
+.sign__line {
+  margin: 2px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+  opacity: 0.92;
+}
+.sign__since {
+  color: var(--gold);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.sign__since::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-inline: 10px;
+  vertical-align: middle;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+
+.sign__name a {
+  color: inherit;
+  text-decoration: none;
+}
+.sign__home {
+  display: block;
+  border-radius: 50%;
+}
+.sign__about {
+  margin: 4px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+  opacity: 0.92;
+}
+/* Open now, or when it opens next: the shop's hours ([site].hours), on the shop's clock. */
+.sign__open {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 2px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sign-ink) 12%, transparent);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.7;
+}
+.sign__open[hidden] {
+  display: none;
+}
+.sign__open::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+.sign__open--open::before {
+  background: var(--open);
+}
+
+.sign__contact {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 10px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn--call {
+  background: var(--sign-ink);
+  color: var(--sign);
+}
+.btn--wa {
+  background: var(--whatsapp);
+  color: var(--whatsapp-ink);
+}
+.btn--line {
+  background: transparent;
+  color: var(--sign-ink);
+  box-shadow: inset 0 0 0 1.5px var(--sign-ink);
+}
+.btn--theme {
+  display: none;
+  width: 48px;
+  padding: 0;
+  background: transparent;
+  color: var(--sign-ink);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--sign-ink) 55%, transparent);
+}
+.js .btn--theme {
+  display: inline-flex;
+}
+.icon--moon,
+[data-theme="light"] .icon--sun {
+  display: none;
+}
+[data-theme="light"] .icon--moon {
+  display: block;
+}
+.js .btn.js-only {
+  display: inline-flex;
+}
+.btn--quiet {
+  background: transparent;
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+.btn--wa-quiet {
+  background: transparent;
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+.btn .num {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* The gold band under the sign and over the footer: the badge's ring, unrolled. */
+.ornament {
+  height: 16px;
+  background-color: var(--gold);
+  -webkit-mask: var(--ornament) repeat-x center / 32px 16px;
+  mask: var(--ornament) repeat-x center / 32px 16px;
+  --ornament: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 16'%3E%3Crect x='0' y='7.4' width='32' height='1.2'/%3E%3Crect x='11.5' y='3.5' width='9' height='9'/%3E%3Crect x='11.5' y='3.5' width='9' height='9' transform='rotate(45 16 8)'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------------ search bar */
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--wash);
+  border-bottom: 1px solid var(--rule);
+}
+.bar__in {
+  padding-block: 12px;
+}
+
+.bar__row {
+  display: flex;
+  gap: 8px;
+}
+
+.search {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+/* Retail or wholesale prices (owner, 2026-10-20): retail unless the reader picks
+   wholesale, always in reach at the top. The page shows one price column at a time. */
+.prices {
+  display: none;
+  flex: none;
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1.5px var(--rule);
+}
+.js .prices {
+  display: inline-flex;
+}
+.prices__opt {
+  min-width: 58px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.prices__opt[aria-checked="true"] {
+  background: var(--sign);
+  color: var(--sign-ink);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .prices__opt {
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+}
+.prices__long {
+  display: none;
+}
+
+.item__slot {
+  display: contents;
+}
+.item__slot--wholesale,
+[data-prices="wholesale"] .item__slot--retail {
+  display: none;
+}
+[data-prices="wholesale"] .item__slot--wholesale {
+  display: contents;
+}
+.search__icon {
+  position: absolute;
+  inset-inline-start: 14px;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  margin-top: -11px;
+  color: var(--ink-soft);
+  fill: currentColor;
+  pointer-events: none;
+}
+.search__input {
+  width: 100%;
+  height: 52px;
+  padding-inline: 46px 48px;
+  border: 1.5px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 18px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.search__input::placeholder {
+  color: var(--ink-soft);
+  opacity: 1;
+}
+.search__input::-webkit-search-cancel-button {
+  display: none;
+}
+.search__input:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.search__clear {
+  position: absolute;
+  inset-inline-end: 4px;
+  top: 4px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.search__clear[hidden] {
+  display: none;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  margin: 10px calc(var(--gutter) * -1) 0;
+  padding: 2px var(--gutter);
+  overflow-x: auto;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.chips::-webkit-scrollbar {
+  display: none;
+}
+.chip {
+  flex: none;
+  padding: 7px 15px;
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--rule);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.chip[aria-current] {
+  background: var(--sign);
+  box-shadow: none;
+  color: var(--sign-ink);
+}
+
+/* ------------------------------------------------------------------ the list */
+
+.layout {
+  padding-block: 8px 48px;
+}
+
+.toc {
+  display: none;
+}
+
+.cat {
+  padding-top: 26px;
+}
+.cat[hidden],
+.results[hidden],
+#catalog[hidden] {
+  display: none;
+}
+
+.cat__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 6px;
+}
+.cat__name {
+  margin: 0;
+  color: var(--heading);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 29px;
+  line-height: 1.35;
+}
+.cat__count {
+  color: var(--ink-soft);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0 0 6px;
+  font-size: 15px;
+}
+.subnav a {
+  padding-block: 4px;
+  text-decoration: none;
+}
+.subnav a:hover {
+  text-decoration: underline;
+}
+
+.sub {
+  scroll-margin-top: calc(var(--bar-h) + 8px);
+}
+/* The brand stays in view while its items scroll under it. */
+.sub__name {
+  position: sticky;
+  top: var(--bar-h);
+  z-index: 5;
+  margin: 18px 0 2px;
+  padding: 6px 12px;
+  border-inline-start: 4px solid var(--gold);
+  border-radius: 4px;
+  background: var(--wash);
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 9px 2px;
+  border-bottom: 1px solid var(--rule);
+  break-inside: avoid;
+}
+.item__body {
+  flex: 1;
+  min-width: 0;
+}
+.item__line {
+  display: flex;
+  align-items: baseline;
+}
+.item__name {
+  flex: 0 1 auto;
+  min-width: 0;
+  font-size: 17px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.item__pack {
+  margin-inline-start: 2px;
+  color: var(--ink-soft);
+  font-size: 14px;
+  white-space: nowrap;
+}
+.item__lead {
+  flex: 1 1 20px;
+  min-width: 20px;
+  height: 1px;
+  margin-inline: 8px;
+  border-bottom: 2px dotted var(--leader);
+  transform: translateY(-0.3em);
+}
+.item__price {
+  flex: none;
+  color: var(--price);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.item__cur {
+  margin-inline-start: 1px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 400;
+}
+/* A price is also the way to order it: tapping it opens WhatsApp with the order written. */
+.item__order {
+  text-decoration: none;
+}
+.item__order:hover .item__wa,
+.item__order:focus-visible .item__wa {
+  opacity: 1;
+}
+.item__wa {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-inline-start: 6px;
+  vertical-align: -1px;
+  color: var(--accent);
+  opacity: 0.65;
+}
+.item__price--none {
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+.item__ask {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 11px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.6;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.item__ask .icon {
+  width: 15px;
+  height: 15px;
+}
+.item__ask:hover {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+/* + beside each item: into the order basket. Shows how many once it is in. */
+.item__add {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 55%, transparent);
+  color: var(--accent);
+  font-size: 16px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.item__add .icon {
+  width: 18px;
+  height: 18px;
+}
+.item__qty:empty {
+  display: none;
+}
+.item__add--in {
+  background: var(--accent);
+  box-shadow: none;
+  color: var(--paper);
+}
+.item__add--in .icon {
+  display: none;
+}
+.item__add:active {
+  transform: scale(0.94);
+}
+.item__where {
+  display: block;
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.item__pic {
+  flex: none;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 10px;
+  background: var(--wash);
+  cursor: zoom-in;
+}
+.item__pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* An item without a picture beside items with one: the badge's star, not an empty box. */
+.item__pic--none {
+  display: grid;
+  place-items: center;
+  color: var(--gold);
+  cursor: default;
+}
+.item__pic--none .icon {
+  width: 22px;
+  height: 22px;
+  opacity: 0.55;
+}
+
+/* ------------------------------------------------------------------ a section's page */
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 18px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.crumbs a {
+  text-decoration: none;
+}
+.crumbs a:hover {
+  text-decoration: underline;
+}
+.cat__intro {
+  max-width: 70ch;
+  margin: 0 0 8px;
+  color: var(--ink-soft);
+  font-size: 16px;
+}
+.hint {
+  margin: 14px 0 0;
+  color: var(--ink-soft);
+  font-size: 15px;
+}
+.js-inline {
+  display: none;
+}
+.js .js-inline {
+  display: inline;
+}
+.whole {
+  margin: 30px 0 0;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------ search results */
+
+.results {
+  padding-top: 18px;
+}
+.results__head {
+  margin: 0 0 4px;
+  color: var(--ink-soft);
+  font-size: 15px;
+}
+.results__empty {
+  margin-top: 8px;
+  padding: 28px 20px;
+  border-radius: var(--radius);
+  background: var(--wash);
+  text-align: center;
+}
+.results__empty[hidden] {
+  display: none;
+}
+.results__empty p {
+  margin: 0 0 16px;
+}
+
+/* ------------------------------------------------------------------ footer */
+
+.foot {
+  background: var(--sign);
+  color: var(--sign-ink);
+}
+.foot__in {
+  display: grid;
+  gap: 18px;
+  padding-block: 30px calc(34px + env(safe-area-inset-bottom));
+}
+.foot__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.foot__badge {
+  width: 52px;
+  height: 52px;
+}
+.foot__name {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.foot__addr {
+  margin: 0;
+  font-style: normal;
+  line-height: 1.7;
+}
+.foot__addr a {
+  color: inherit;
+}
+.foot__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.foot__link {
+  margin: 4px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  direction: ltr;
+  text-align: right;
+}
+.foot__link a {
+  color: var(--gold);
+  text-decoration: none;
+}
+.foot__hours {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.foot__sections {
+  grid-column: 1 / -1;
+  padding-top: 18px;
+  border-top: 1px solid color-mix(in srgb, var(--sign-ink) 22%, transparent);
+}
+.foot__title {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.foot__sections ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 15px;
+}
+.foot__sections a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+.foot__sections a[aria-current] {
+  color: var(--gold);
+  font-weight: 600;
+  text-decoration: none;
+}
+.foot__updated {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+/* ------------------------------------------------------------------ picture viewer */
+
+.photo {
+  width: min(94vw, 760px);
+  max-height: 92vh;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background: var(--paper);
+  color: var(--ink);
+  overflow: hidden;
+}
+.photo::backdrop {
+  background: rgb(8 14 10 / 0.78);
+}
+.photo__img {
+  width: 100%;
+  max-height: 74vh;
+  object-fit: contain;
+  background: #fff;
+}
+.photo__cap {
+  margin: 0;
+  padding: 12px 18px 16px;
+  font-weight: 600;
+}
+.photo__price {
+  margin-inline-start: 8px;
+  color: var(--price);
+  white-space: nowrap;
+}
+.photo__close {
+  position: absolute;
+  inset-inline-end: 10px;
+  top: 10px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.92);
+  color: #1a1e1b;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ the order basket */
+
+/* The order waiting at the bottom of the screen, one tap from WhatsApp. */
+.basket-bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 18;
+  padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom));
+  background: linear-gradient(transparent, color-mix(in srgb, var(--paper) 88%, transparent) 30%);
+  pointer-events: none;
+}
+.basket-bar[hidden] {
+  display: none;
+}
+.basket-bar__btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 560px;
+  min-height: 54px;
+  margin-inline: auto;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--whatsapp);
+  color: var(--whatsapp-ink);
+  font-size: 17px;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.28);
+  cursor: pointer;
+  pointer-events: auto;
+}
+.basket-bar__go {
+  margin-inline-start: auto;
+}
+.has-basket .totop {
+  bottom: calc(80px + env(safe-area-inset-bottom));
+}
+.has-basket .foot__in {
+  padding-bottom: calc(110px + env(safe-area-inset-bottom));
+}
+
+/* The order itself: a sheet from the bottom on a phone, a card on a wide screen. */
+.sheet {
+  width: 100%;
+  max-width: 640px;
+  max-height: 88vh;
+  margin: auto auto 0;
+  padding: 18px var(--gutter) calc(18px + env(safe-area-inset-bottom));
+  border: 0;
+  border-radius: 18px 18px 0 0;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-y: auto;
+}
+.sheet::backdrop {
+  background: rgb(8 14 10 / 0.7);
+}
+.sheet__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.sheet__title {
+  margin: 0;
+  color: var(--heading);
+  font-family: var(--display);
+  font-size: 28px;
+  line-height: 1.3;
+}
+.sheet__kind {
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.sheet__close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-inline-start: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--wash);
+  cursor: pointer;
+}
+.sheet__empty {
+  margin: 18px 0;
+  color: var(--ink-soft);
+}
+.sheet__empty[hidden],
+.sheet__total[hidden] {
+  display: none;
+}
+.sheet__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.line {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "name remove"
+    "price step";
+  align-items: center;
+  gap: 4px 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.line__name {
+  grid-area: name;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.line__price {
+  grid-area: price;
+  color: var(--price);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.line__step {
+  grid-area: step;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.line__qty {
+  min-width: 2.2em;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.line__btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--rule);
+  color: var(--ink);
+  cursor: pointer;
+}
+.line__btn--remove {
+  grid-area: remove;
+  box-shadow: none;
+  color: var(--ink-soft);
+}
+.line__btn--remove:hover {
+  color: var(--danger);
+}
+.sheet__total {
+  margin: 14px 0 0;
+  color: var(--price);
+  font-size: 18px;
+  font-weight: 600;
+}
+.sheet__note {
+  display: block;
+  width: 100%;
+  margin: 16px 0 0;
+  padding: 10px 14px;
+  border: 1.5px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  resize: vertical;
+}
+.sheet__note:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+.sheet__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-top: 16px;
+}
+.sheet__send {
+  flex: 1 1 260px;
+}
+.sheet__send[aria-disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.sheet__clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 6px;
+  border: 0;
+  background: transparent;
+  color: var(--danger);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Centred: over the leader dots it hides no name, price or button. */
+.totop {
+  position: fixed;
+  left: calc(50% - 24px);
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  z-index: 15;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--sign);
+  color: var(--sign-ink);
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.22);
+  cursor: pointer;
+}
+.totop[hidden] {
+  display: none;
+}
+
+.js-only {
+  display: none;
+}
+.js .js-only {
+  display: block;
+}
+
+/* ------------------------------------------------------------------ wider screens */
+
+@media (min-width: 560px) {
+  .prices__short {
+    display: none;
+  }
+  .prices__long {
+    display: inline;
+  }
+}
+
+@media (min-width: 720px) {
+  :root {
+    --gutter: 28px;
+  }
+  .sheet {
+    margin: auto;
+    border-radius: 18px;
+  }
+  .sign__in {
+    grid-template-columns: auto 1fr auto;
+    column-gap: 20px;
+    padding-block: 24px;
+  }
+  .sign__badge {
+    width: 104px;
+    height: 104px;
+  }
+  .sign__name {
+    font-size: 44px;
+  }
+  .sign__line {
+    font-size: 17px;
+  }
+  .sign__contact {
+    grid-column: auto;
+    display: flex;
+  }
+  .cat__name {
+    font-size: 34px;
+  }
+  .foot__in {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+}
+
+@media (min-width: 1024px) {
+  .chips {
+    display: none;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 44px;
+  }
+  .toc {
+    display: block;
+    position: sticky;
+    top: calc(var(--bar-h) + 20px);
+    align-self: start;
+    max-height: calc(100vh - var(--bar-h) - 40px);
+    margin-top: 26px;
+    overflow-y: auto;
+    font-size: 15px;
+  }
+  .toc ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .toc__sec {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .toc__sec span {
+    color: var(--ink-soft);
+    font-weight: 400;
+  }
+  .toc__sec[aria-current] {
+    background: var(--sign);
+    color: var(--sign-ink);
+  }
+  .toc__sec[aria-current] span {
+    color: inherit;
+    opacity: 0.8;
+  }
+  .toc__subs {
+    display: none;
+    padding: 2px 12px 8px !important;
+  }
+  .toc__sec[aria-current] + .toc__subs {
+    display: block;
+  }
+  .toc__subs a {
+    display: block;
+    padding: 3px 10px;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .toc__subs a:hover {
+    color: var(--accent);
+  }
+}
+
+@media (min-width: 1180px) {
+  #catalog .items {
+    columns: 2;
+    column-gap: 44px;
+  }
+}
+
+@media print {
+  .bar,
+  .totop,
+  .sign__contact,
+  .item__ask,
+  .item__add,
+  .basket-bar {
+    display: none;
+  }
+}

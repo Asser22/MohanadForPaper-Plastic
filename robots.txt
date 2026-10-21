@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://asser22.github.io/MohanadForPaper-Plastic/sitemap.xml
